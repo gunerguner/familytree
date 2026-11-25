@@ -1,0 +1,31 @@
+# 依赖与构建
+node_modules/
+dist/
+dist-test/
+*.tsbuildinfo
+coverage/
+
+# 本地数据与备份
+server/data/
+images/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+
+# 环境变量（保留 *.env.example）
+.env
+.env.*
+!.env.example
+
+# 本机与日志
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.idea/

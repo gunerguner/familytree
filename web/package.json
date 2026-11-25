@@ -1,0 +1,25 @@
+{
+  "name": "familytree-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "naive-ui": "^2.45.3",
+    "pinia": "^4.1.0",
+    "vue": "^3.5.46",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8",
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.1.0"
+  }
+}

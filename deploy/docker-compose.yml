@@ -1,0 +1,17 @@
+services:
+  familytree:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: familytree:local
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file: .env
+    volumes:
+      - familytree-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+volumes:
+  familytree-data:

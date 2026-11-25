@@ -1,0 +1,195 @@
+<script setup lang="ts">
+import { computed, reactive, ref, watch } from 'vue';
+import { NButton, NForm, NFormItem, NInput, NInputNumber, NSelect, useMessage } from 'naive-ui';
+import { ApiError } from '../api/client';
+import { ROLE_LABELS, type ParentRole, type Person, type PersonDetail, type PersonInput } from '../api/types';
+import { useTreeStore } from '../stores/tree';
+
+const props = defineProps<{
+  detail: PersonDetail | null;
+}>();
+
+const emit = defineEmits<{ cancel: []; saved: [id: number] }>();
+const tree = useTreeStore();
+const message = useMessage();
+const pending = ref(false);
+const nameError = ref('');
+const fieldErrors = ref<Record<string, string>>({});
+
+const roles = (Object.keys(ROLE_LABELS) as ParentRole[]).map((value) => ({
+  label: ROLE_LABELS[value],
+  value,
+}));
+
+const form = reactive({
+  name: '',
+  kinship: '',
+  formerName: '',
+  nickname: '',
+  birthText: '',
+  deathText: '',
+  narrative: '',
+  parents: [] as { personId: number | null; role: ParentRole; sortOrder: number }[],
+  marriages: [] as { personId: number | null; label: string; sortOrder: number }[],
+});
+
+watch(
+  () => props.detail,
+  (detail) => {
+    form.name = detail?.name ?? '';
+    form.kinship = detail?.kinship ?? '';
+    form.formerName = detail?.formerName ?? '';
+    form.nickname = detail?.nickname ?? '';
+    form.birthText = detail?.birthText ?? '';
+    form.deathText = detail?.deathText ?? '';
+    form.narrative = detail?.narrative ?? '';
+    form.parents = (detail?.parents ?? []).map((item) => ({
+      personId: item.id,
+      role: item.role,
+      sortOrder: item.sortOrder,
+    }));
+    form.marriages = (detail?.marriages ?? []).map((item) => ({
+      personId: item.personId,
+      label: item.label ?? '',
+      sortOrder: item.sortOrder,
+    }));
+    nameError.value = '';
+    fieldErrors.value = {};
+  },
+  { immediate: true },
+);
+
+const selfId = computed(() => props.detail?.id ?? null);
+
+function options(selected: number | null, rows: { personId: number | null }[]) {
+  const taken = new Set(rows.map((row) => row.personId).filter((id) => id != null && id !== selected));
+  return tree.persons
+    .filter((person) => person.id !== selfId.value && !taken.has(person.id))
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name, 'zh'))
+    .map((person: Person) => ({ label: person.name, value: person.id }));
+}
+
+function emptyToNull(value: string) {
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+async function submit() {
+  nameError.value = '';
+  fieldErrors.value = {};
+  if (!form.name.trim()) {
+    nameError.value = '请填写姓名';
+    return;
+  }
+  if (form.parents.some((row) => row.personId == null) || form.marriages.some((row) => row.personId == null)) {
+    message.error('请把空着的父母或配偶选完整，或删掉那一行');
+    return;
+  }
+  const input: PersonInput = {
+    name: form.name.trim(),
+    kinship: emptyToNull(form.kinship),
+    formerName: emptyToNull(form.formerName),
+    nickname: emptyToNull(form.nickname),
+    birthText: emptyToNull(form.birthText),
+    deathText: emptyToNull(form.deathText),
+    narrative: emptyToNull(form.narrative),
+    parents: form.parents.map((row) => ({
+      personId: row.personId!,
+      role: row.role,
+      sortOrder: row.sortOrder ?? 0,
+    })),
+    marriages: form.marriages.map((row) => ({
+      personId: row.personId!,
+      label: emptyToNull(row.label),
+      sortOrder: row.sortOrder ?? 0,
+    })),
+  };
+  pending.value = true;
+  try {
+    const saved = await tree.savePerson(input, props.detail?.id);
+    message.success('已保存');
+    emit('saved', saved.id);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      fieldErrors.value = error.fields ?? {};
+      message.error(error.message);
+    } else {
+      message.error('网络中断，请再试一次');
+    }
+  } finally {
+    pending.value = false;
+  }
+}
+</script>
+
+<template>
+  <n-form @submit.prevent="submit">
+    <n-form-item label="姓名" :validation-status="nameError || fieldErrors.name ? 'error' : undefined" :feedback="nameError || fieldErrors.name">
+      <n-input v-model:value="form.name" />
+    </n-form-item>
+    <n-form-item label="称谓">
+      <n-input v-model:value="form.kinship" />
+    </n-form-item>
+    <n-form-item label="原名">
+      <n-input v-model:value="form.formerName" />
+    </n-form-item>
+    <n-form-item label="小名">
+      <n-input v-model:value="form.nickname" />
+    </n-form-item>
+    <n-form-item label="出生">
+      <n-input v-model:value="form.birthText" placeholder="按资料原文填写，例如 1900.2.18 或 正月十九" />
+    </n-form-item>
+    <n-form-item label="卒于">
+      <n-input v-model:value="form.deathText" placeholder="按资料原文填写，例如 1900.2.18 或 正月十九" />
+    </n-form-item>
+    <n-form-item label="记述">
+      <n-input v-model:value="form.narrative" type="textarea" :autosize="{ minRows: 4, maxRows: 10 }" />
+    </n-form-item>
+
+    <section class="block">
+      <div v-for="(row, index) in form.parents" :key="index" class="row">
+        <n-select v-model:value="row.personId" filterable placeholder="选择人物" :options="options(row.personId, form.parents)" />
+        <n-select v-model:value="row.role" :options="roles" />
+        <n-input-number v-model:value="row.sortOrder" />
+        <n-button text type="error" @click="form.parents.splice(index, 1)">移除</n-button>
+      </div>
+      <n-button text @click="form.parents.push({ personId: null, role: 'father', sortOrder: form.parents.length })">添加父母</n-button>
+    </section>
+
+    <section class="block">
+      <div v-for="(row, index) in form.marriages" :key="index" class="row">
+        <n-select v-model:value="row.personId" filterable placeholder="选择人物" :options="options(row.personId, form.marriages)" />
+        <n-input v-model:value="row.label" placeholder="妻子、续弦、丈夫" />
+        <n-input-number v-model:value="row.sortOrder" />
+        <n-button text type="error" @click="form.marriages.splice(index, 1)">移除</n-button>
+      </div>
+      <n-button text @click="form.marriages.push({ personId: null, label: '', sortOrder: form.marriages.length })">添加配偶</n-button>
+    </section>
+
+    <div class="actions">
+      <n-button type="primary" attr-type="submit" :loading="pending" :disabled="pending">保存</n-button>
+      <n-button @click="emit('cancel')">取消</n-button>
+    </div>
+  </n-form>
+</template>
+
+<style scoped>
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 7rem 6rem auto;
+  gap: 8px;
+  width: 100%;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+}
+</style>

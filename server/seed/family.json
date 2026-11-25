@@ -1,0 +1,1138 @@
+{
+  "persons": [
+    {
+      "key": "er-shou",
+      "name": "张尔寿",
+      "kinship": "曾祖父",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "十一月初八",
+      "deathText": "四月十二",
+      "narrative": null
+    },
+    {
+      "key": "fan-shi",
+      "name": "范氏",
+      "kinship": "祖母",
+      "formerName": null,
+      "nickname": "范道悦",
+      "birthText": "1868年8月12日",
+      "deathText": "1951年3月29日",
+      "narrative": "说明表原名范氏，旁有手写修订"
+    },
+    {
+      "key": "wang-furen",
+      "name": "王夫人",
+      "kinship": "曾祖母",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "七月初八",
+      "deathText": "十一月二十",
+      "narrative": null
+    },
+    {
+      "key": "bo-sen",
+      "name": "张伯森",
+      "kinship": "祖父",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "十一月初二巳时（9-11点）",
+      "deathText": "二月十九亥时（21-23点）",
+      "narrative": "小商人"
+    },
+    {
+      "key": "zhong-fen",
+      "name": "张仲芬",
+      "kinship": "祖叔父",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "qin-ru",
+      "name": "张勤如",
+      "kinship": "叔",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "qiu",
+      "name": "邱季珊",
+      "kinship": null,
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "yin",
+      "name": "印氏",
+      "kinship": null,
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "liu-guan",
+      "name": "榴官",
+      "kinship": "表姐",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "嫁王家"
+    },
+    {
+      "key": "wang",
+      "name": "王",
+      "kinship": "表姐夫",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是榴官的丈夫"
+    },
+    {
+      "key": "jin-yuan",
+      "name": "金元",
+      "kinship": "表兄",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "在福建"
+    },
+    {
+      "key": "da-yuan",
+      "name": "达元",
+      "kinship": "表弟",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "da-da",
+      "name": "达达",
+      "kinship": "表弟",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "zhen-yi",
+      "name": "张贞宜",
+      "kinship": "小姑母",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周经胜第二个妻子"
+    },
+    {
+      "key": "zhou-jingsheng",
+      "name": "周经胜",
+      "kinship": "小姑父",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "资本家，1944年夏去世。前妻生有二女。是周金秀的哥哥，既是姑父又是舅父。"
+    },
+    {
+      "key": "zhou-youzhen",
+      "name": "周幼贞",
+      "kinship": "表姐",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周经胜前妻所生女儿"
+    },
+    {
+      "key": "wang-xin",
+      "name": "王新",
+      "kinship": "表侄女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是榴官的女儿"
+    },
+    {
+      "key": "yao-fen",
+      "name": "瑶芬",
+      "kinship": "表侄女",
+      "formerName": null,
+      "nickname": "瑶芬",
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周幼贞所生"
+    },
+    {
+      "key": "zhou-houlian",
+      "name": "周侯廉",
+      "kinship": "表兄",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是张贞宜、周经胜领养"
+    },
+    {
+      "key": "zhang-huanqing",
+      "name": "张焕清",
+      "kinship": "表嫂",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "上海无线电三厂子弟学校\n\n是周侯廉的妻子"
+    },
+    {
+      "key": "zhou-qingping",
+      "name": "周庆平",
+      "kinship": "表侄子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1945年",
+      "deathText": null,
+      "narrative": "上海市邮电研究所\n\n是周侯廉、张焕清大儿子"
+    },
+    {
+      "key": "zhou-peiling",
+      "name": "周佩玲",
+      "kinship": "表侄女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1947年",
+      "deathText": null,
+      "narrative": "退休于民立中学\n\n是周侯廉、张焕清大女儿"
+    },
+    {
+      "key": "zhou-hualong",
+      "name": "周华龙",
+      "kinship": "表侄婿",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周佩玲的丈夫"
+    },
+    {
+      "key": "zhou-qinggang",
+      "name": "周庆刚",
+      "kinship": "表侄子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1949年",
+      "deathText": null,
+      "narrative": "吉林四平市\n\n是周侯廉、张焕清二儿子"
+    },
+    {
+      "key": "zhou-qingwei",
+      "name": "周庆伟",
+      "kinship": "表侄子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1951年",
+      "deathText": null,
+      "narrative": "是周侯廉、张焕清三儿子"
+    },
+    {
+      "key": "li-shiwei",
+      "name": "李士蔚",
+      "kinship": "表侄媳",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1958年",
+      "deathText": null,
+      "narrative": "退休于民立中学\n\n是周庆伟的妻子"
+    },
+    {
+      "key": "zhou-lanlan",
+      "name": "周兰兰",
+      "kinship": "表侄女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1953年",
+      "deathText": null,
+      "narrative": "是周侯廉、张焕清小女儿"
+    },
+    {
+      "key": "zhong",
+      "name": "钟",
+      "kinship": "表侄婿",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周兰兰的丈夫"
+    },
+    {
+      "key": "zhong-sanzhi",
+      "name": "钟散芝",
+      "kinship": "表侄孙女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周兰兰的女儿"
+    },
+    {
+      "key": "zhou-tianmin",
+      "name": "周天民",
+      "kinship": "表侄孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周庆平的儿子"
+    },
+    {
+      "key": "zhou-liying",
+      "name": "周立莺",
+      "kinship": "表侄孙女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": "是周佩玲的女儿"
+    },
+    {
+      "key": "zhou-beibei",
+      "name": "周蓓蓓",
+      "kinship": "表侄孙女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1988年",
+      "deathText": null,
+      "narrative": "是周庆刚的女儿"
+    },
+    {
+      "key": "zhou-wenkai",
+      "name": "周文凯",
+      "kinship": "表侄孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1988年",
+      "deathText": null,
+      "narrative": "是周庆伟的儿子"
+    },
+    {
+      "key": "jian-ru",
+      "name": "张坚如",
+      "kinship": "父",
+      "formerName": "张坚",
+      "nickname": null,
+      "birthText": "1900.2.18（正月十九）",
+      "deathText": "1963.4.7（三月十四，静安区中心医院）",
+      "narrative": "户籍：上海市康定路88弄140\n\n附件1"
+    },
+    {
+      "key": "zhou-jinxiu",
+      "name": "周金秀",
+      "kinship": "母",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1899.3.（正月二十二）",
+      "deathText": "1931.2.7（十二月二十 十戌时，19-21点）",
+      "narrative": "是其铮、其谊生母"
+    },
+    {
+      "key": "wei",
+      "name": "魏怀瑾",
+      "kinship": "继母",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "五月十八卯时（5-7点）",
+      "deathText": "五月初八子时（23-1点）",
+      "narrative": null
+    },
+    {
+      "key": "qi-zheng",
+      "name": "张其铮",
+      "kinship": "兄",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1926.12.28",
+      "deathText": "2004.2.20（二月初一）",
+      "narrative": "1952年支援外地，在青岛市中国银行"
+    },
+    {
+      "key": "ge",
+      "name": "葛丽霞",
+      "kinship": "嫂",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1933年",
+      "deathText": "2017.12.25（十一月初八）",
+      "narrative": "银行\n\n离异，有一儿子，归女方"
+    },
+    {
+      "key": "fang",
+      "name": "张放",
+      "kinship": "大侄",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1954年",
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "ming",
+      "name": "张明",
+      "kinship": "二侄",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1956.3.31",
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "song-wei",
+      "name": "宋微",
+      "kinship": "二侄媳",
+      "formerName": null,
+      "nickname": null,
+      "birthText": null,
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "tingting",
+      "name": "张婷婷",
+      "kinship": "侄孙女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1986.11.14",
+      "deathText": "2015.3.2（正月十二，静安区中心医院）",
+      "narrative": "附件2"
+    },
+    {
+      "key": "qi-yi",
+      "name": "张其谊",
+      "kinship": null,
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1929.4.7（二月二十八）",
+      "deathText": null,
+      "narrative": "退休于陕西省驻沪办事处"
+    },
+    {
+      "key": "yan-nan",
+      "name": "严南",
+      "kinship": null,
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1934.1.11（十一月二十六）",
+      "deathText": null,
+      "narrative": "退休于电视十一厂"
+    },
+    {
+      "key": "yu-cong",
+      "name": "张予聪",
+      "kinship": "大儿子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1955.10.24（九月初九）",
+      "deathText": null,
+      "narrative": "退休于公共汽车三场"
+    },
+    {
+      "key": "li-qin",
+      "name": "李琴",
+      "kinship": "大媳妇",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1959.12.29（十一月三十）",
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "zhang-zheng",
+      "name": "张正",
+      "kinship": "大孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1987.5.18（四月二十一）",
+      "deathText": null,
+      "narrative": "上海造币厂"
+    },
+    {
+      "key": "zhang-qin",
+      "name": "张琴",
+      "kinship": "孙媳妇",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1987.8.12（六月十八）",
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "jia-min",
+      "name": "张嘉旻",
+      "kinship": "曾孙女",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "2017.4.25（三月二十九）",
+      "deathText": null,
+      "narrative": "张正的女儿\n\n出生于上海美华妇幼医院"
+    },
+    {
+      "key": "yu-min",
+      "name": "张予敏",
+      "kinship": "二儿子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1958.4.7（二月十九）",
+      "deathText": null,
+      "narrative": "退休于上海市食品药品监督管理局\n\n附件3"
+    },
+    {
+      "key": "song-pei",
+      "name": "宋培奋",
+      "kinship": "二媳妇",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1960.10.16（八月二十六）",
+      "deathText": null,
+      "narrative": "退休于上海市民立中学"
+    },
+    {
+      "key": "zhi-cheng",
+      "name": "张之诚",
+      "kinship": "二孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1988.2.19（正月初三）",
+      "deathText": null,
+      "narrative": "上海颐达信息技术有限公司（途虎养车网）"
+    },
+    {
+      "key": "lian",
+      "name": "练佳艳",
+      "kinship": "孙媳妇",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1987.11.13（九月二十二）",
+      "deathText": null,
+      "narrative": "上海中芯国际学校"
+    },
+    {
+      "key": "lian-ning",
+      "name": "张炼宁",
+      "kinship": "曾孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "2022.10.21（九月二十六）",
+      "deathText": null,
+      "narrative": "张之诚的儿子\n\n出生于上海美华妇幼医院"
+    },
+    {
+      "key": "yu-ling",
+      "name": "张予凌",
+      "kinship": "三儿子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1960.10.12（八月二十二）",
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "pang",
+      "name": "庞慧芳",
+      "kinship": "三媳妇",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1963.6.28（五月初八）",
+      "deathText": null,
+      "narrative": "退休于颐闻信息技术（上海）有限公司"
+    },
+    {
+      "key": "jia-jun",
+      "name": "张家骏",
+      "kinship": "小孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1990.7.6（五月十四）",
+      "deathText": null,
+      "narrative": null
+    },
+    {
+      "key": "bian",
+      "name": "边禧暎",
+      "kinship": "孙媳妇",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "1989.2.25（正月二十）",
+      "deathText": null,
+      "narrative": "韩国首尔人"
+    },
+    {
+      "key": "zai-yi",
+      "name": "张载一",
+      "kinship": "曾孙子",
+      "formerName": null,
+      "nickname": null,
+      "birthText": "2022.10.14（九月十九）",
+      "deathText": null,
+      "narrative": "张家骏的儿子\n\n出生于韩国首尔"
+    }
+  ],
+  "parents": [
+    {
+      "child": "bo-sen",
+      "parent": "er-shou",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "bo-sen",
+      "parent": "fan-shi",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhong-fen",
+      "parent": "er-shou",
+      "role": "father",
+      "sortOrder": 1
+    },
+    {
+      "child": "zhong-fen",
+      "parent": "fan-shi",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "jian-ru",
+      "parent": "bo-sen",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "qin-ru",
+      "parent": "zhong-fen",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "liu-guan",
+      "parent": "qin-ru",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "liu-guan",
+      "parent": "qiu",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "jin-yuan",
+      "parent": "qin-ru",
+      "role": "father",
+      "sortOrder": 1
+    },
+    {
+      "child": "jin-yuan",
+      "parent": "qiu",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "da-yuan",
+      "parent": "qin-ru",
+      "role": "father",
+      "sortOrder": 2
+    },
+    {
+      "child": "da-yuan",
+      "parent": "qiu",
+      "role": "mother",
+      "sortOrder": 2
+    },
+    {
+      "child": "da-da",
+      "parent": "qin-ru",
+      "role": "father",
+      "sortOrder": 3
+    },
+    {
+      "child": "da-da",
+      "parent": "qiu",
+      "role": "mother",
+      "sortOrder": 3
+    },
+    {
+      "child": "zhen-yi",
+      "parent": "qin-ru",
+      "role": "father",
+      "sortOrder": 4
+    },
+    {
+      "child": "zhen-yi",
+      "parent": "qiu",
+      "role": "mother",
+      "sortOrder": 4
+    },
+    {
+      "child": "wang-xin",
+      "parent": "wang",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "wang-xin",
+      "parent": "liu-guan",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "yao-fen",
+      "parent": "liu-guan",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "zhou-youzhen",
+      "parent": "zhou-jingsheng",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-houlian",
+      "parent": "zhou-jingsheng",
+      "role": "adoptive_father",
+      "sortOrder": 1
+    },
+    {
+      "child": "zhou-houlian",
+      "parent": "zhen-yi",
+      "role": "adoptive_mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "zhou-qingping",
+      "parent": "zhou-houlian",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-qingping",
+      "parent": "zhang-huanqing",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-peiling",
+      "parent": "zhou-houlian",
+      "role": "father",
+      "sortOrder": 1
+    },
+    {
+      "child": "zhou-peiling",
+      "parent": "zhang-huanqing",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "zhou-qinggang",
+      "parent": "zhou-houlian",
+      "role": "father",
+      "sortOrder": 2
+    },
+    {
+      "child": "zhou-qinggang",
+      "parent": "zhang-huanqing",
+      "role": "mother",
+      "sortOrder": 2
+    },
+    {
+      "child": "zhou-qingwei",
+      "parent": "zhou-houlian",
+      "role": "father",
+      "sortOrder": 3
+    },
+    {
+      "child": "zhou-qingwei",
+      "parent": "zhang-huanqing",
+      "role": "mother",
+      "sortOrder": 3
+    },
+    {
+      "child": "zhou-lanlan",
+      "parent": "zhou-houlian",
+      "role": "father",
+      "sortOrder": 4
+    },
+    {
+      "child": "zhou-lanlan",
+      "parent": "zhang-huanqing",
+      "role": "mother",
+      "sortOrder": 4
+    },
+    {
+      "child": "zhou-tianmin",
+      "parent": "zhou-qingping",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-liying",
+      "parent": "zhou-peiling",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-liying",
+      "parent": "zhou-hualong",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-beibei",
+      "parent": "zhou-qinggang",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-wenkai",
+      "parent": "zhou-qingwei",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhou-wenkai",
+      "parent": "li-shiwei",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhong-sanzhi",
+      "parent": "zhou-lanlan",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhong-sanzhi",
+      "parent": "zhong",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "qi-zheng",
+      "parent": "jian-ru",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "qi-zheng",
+      "parent": "zhou-jinxiu",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "qi-zheng",
+      "parent": "wei",
+      "role": "stepmother",
+      "sortOrder": 0
+    },
+    {
+      "child": "qi-yi",
+      "parent": "jian-ru",
+      "role": "father",
+      "sortOrder": 1
+    },
+    {
+      "child": "qi-yi",
+      "parent": "zhou-jinxiu",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "qi-yi",
+      "parent": "wei",
+      "role": "stepmother",
+      "sortOrder": 1
+    },
+    {
+      "child": "fang",
+      "parent": "qi-zheng",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "fang",
+      "parent": "ge",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "ming",
+      "parent": "qi-zheng",
+      "role": "father",
+      "sortOrder": 1
+    },
+    {
+      "child": "ming",
+      "parent": "ge",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "tingting",
+      "parent": "ming",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "tingting",
+      "parent": "song-wei",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "yu-cong",
+      "parent": "qi-yi",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "yu-cong",
+      "parent": "yan-nan",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "yu-min",
+      "parent": "qi-yi",
+      "role": "father",
+      "sortOrder": 1
+    },
+    {
+      "child": "yu-min",
+      "parent": "yan-nan",
+      "role": "mother",
+      "sortOrder": 1
+    },
+    {
+      "child": "yu-ling",
+      "parent": "qi-yi",
+      "role": "father",
+      "sortOrder": 2
+    },
+    {
+      "child": "yu-ling",
+      "parent": "yan-nan",
+      "role": "mother",
+      "sortOrder": 2
+    },
+    {
+      "child": "zhang-zheng",
+      "parent": "yu-cong",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhang-zheng",
+      "parent": "li-qin",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "jia-min",
+      "parent": "zhang-zheng",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "jia-min",
+      "parent": "zhang-qin",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhi-cheng",
+      "parent": "yu-min",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zhi-cheng",
+      "parent": "song-pei",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "lian-ning",
+      "parent": "zhi-cheng",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "lian-ning",
+      "parent": "lian",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "jia-jun",
+      "parent": "yu-ling",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "jia-jun",
+      "parent": "pang",
+      "role": "mother",
+      "sortOrder": 0
+    },
+    {
+      "child": "zai-yi",
+      "parent": "jia-jun",
+      "role": "father",
+      "sortOrder": 0
+    },
+    {
+      "child": "zai-yi",
+      "parent": "bian",
+      "role": "mother",
+      "sortOrder": 0
+    }
+  ],
+  "marriages": [
+    {
+      "a": "er-shou",
+      "b": "fan-shi",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "qin-ru",
+      "b": "qiu",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "qin-ru",
+      "b": "yin",
+      "label": "续弦",
+      "sortOrder": 1
+    },
+    {
+      "a": "liu-guan",
+      "b": "wang",
+      "label": "丈夫",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhen-yi",
+      "b": "zhou-jingsheng",
+      "label": "丈夫",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhou-houlian",
+      "b": "zhang-huanqing",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhou-peiling",
+      "b": "zhou-hualong",
+      "label": "丈夫",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhou-qingwei",
+      "b": "li-shiwei",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhou-lanlan",
+      "b": "zhong",
+      "label": "丈夫",
+      "sortOrder": 0
+    },
+    {
+      "a": "jian-ru",
+      "b": "zhou-jinxiu",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "jian-ru",
+      "b": "wei",
+      "label": "继母",
+      "sortOrder": 1
+    },
+    {
+      "a": "qi-zheng",
+      "b": "ge",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "ming",
+      "b": "song-wei",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "qi-yi",
+      "b": "yan-nan",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "yu-cong",
+      "b": "li-qin",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhang-zheng",
+      "b": "zhang-qin",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "yu-min",
+      "b": "song-pei",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "zhi-cheng",
+      "b": "lian",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "yu-ling",
+      "b": "pang",
+      "label": "妻子",
+      "sortOrder": 0
+    },
+    {
+      "a": "jia-jun",
+      "b": "bian",
+      "label": "妻子",
+      "sortOrder": 0
+    }
+  ]
+}
