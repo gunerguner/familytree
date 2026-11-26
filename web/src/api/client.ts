@@ -15,7 +15,7 @@ export function setUnauthorizedHandler(handler: () => void) {
   onUnauthorized = handler;
 }
 
-export async function api<T>(path: string, init: RequestInit & { form?: boolean } = {}): Promise<T> {
+export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const method = (init.method ?? 'GET').toUpperCase();
   const headers = new Headers(init.headers);
   if (method === 'POST' || method === 'PATCH' || method === 'DELETE') {

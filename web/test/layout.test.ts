@@ -1,4 +1,5 @@
-import { layout, rootIds } from '../src/lib/layout';
+import { layout } from '../src/lib/layout';
+import { rootIds } from '../src/lib/graph';
 import type { Marriage, ParentLink, Person } from '../src/api/types';
 
 function person(id: number, name: string): Person {
@@ -48,6 +49,39 @@ describe('layout', () => {
     const blood = result.lines.find((line) => line.kind === 'blood')!;
     expect(blood.source).toBe('2');
     expect(blood.target).toBe('fold:1');
+  });
+
+  it('keeps the second wife of a side spouse beside him', () => {
+    const persons = [
+      person(0, '张柏森'),
+      person(1, '大姑母'),
+      person(2, '邵季珊'),
+      person(3, '邱氏'),
+      person(4, '榴官'),
+      person(5, '达元'),
+    ];
+    const parents: ParentLink[] = [
+      { childId: 1, parentId: 0, role: 'father', sortOrder: 0 },
+      { childId: 4, parentId: 1, role: 'mother', sortOrder: 0 },
+      { childId: 4, parentId: 2, role: 'father', sortOrder: 0 },
+      { childId: 5, parentId: 2, role: 'father', sortOrder: 2 },
+      { childId: 5, parentId: 3, role: 'mother', sortOrder: 0 },
+    ];
+    const marriages: Marriage[] = [
+      { id: 1, aId: 2, bId: 1, label: '妻子', sortOrder: 0 },
+      { id: 2, aId: 2, bId: 3, label: '续弦', sortOrder: 1 },
+    ];
+    const result = layout(persons, parents, marriages, new Set());
+    expect(result.cards.map((card) => card.id)).toEqual(expect.arrayContaining([1, 2, 3, 4, 5]));
+    expect(result.cards.filter((card) => card.side).map((card) => card.id)).toEqual([2, 3]);
+    expect(
+      result.lines
+        .filter((line) => line.kind === 'marriage')
+        .map((line) => [line.source, line.target]),
+    ).toEqual([
+      ['1', '2'],
+      ['2', '3'],
+    ]);
   });
 
   it('places disconnected people on one row', () => {

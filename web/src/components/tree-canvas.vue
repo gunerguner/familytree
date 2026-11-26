@@ -21,6 +21,7 @@ const props = defineProps<{
 const emit = defineEmits<{ select: [id: number]; toggle: [id: number]; create: [] }>();
 
 const flow = ref<VueFlowInstance<FlowNode, FamilyEdge> | null>(null);
+const focusPersonId = ref<number | null>(null);
 const graph = computed(() =>
   toFlow(layout(props.persons, props.parents, props.marriages, new Set(props.collapsed)), props.persons, props.selectedId),
 );
@@ -46,8 +47,6 @@ watch(
   },
   { flush: 'post' },
 );
-
-const focusPersonId = ref<number | null>(null);
 
 function onNodeClick({ node }: NodeMouseEvent<FlowNode>) {
   if (node.type === 'fold') {

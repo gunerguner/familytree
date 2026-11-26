@@ -1,4 +1,13 @@
 import type { Marriage, ParentLink, Person } from '../api/types';
+import { childLinks, rootIds, spousesOf } from './graph';
+import {
+  bloodLine,
+  marriageLines,
+  moveFold,
+  moveLine,
+  toPath,
+  type DraftLine,
+} from './lines';
 
 export interface LayoutCard {
   id: number;
@@ -38,17 +47,9 @@ export interface LayoutResult {
   folds: LayoutFold[];
 }
 
-interface DraftLine {
-  kind: 'blood' | 'marriage';
-  source: string;
-  target: string;
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  railY?: number;
-  childY?: number;
-  targets?: number[];
+interface RowCard {
+  id: number;
+  side: boolean;
 }
 
 interface Unit {
@@ -70,89 +71,6 @@ const GROUP_GAP = 28;
 const GENERATION_GAP = 56;
 const FOLD_STUB = 22;
 
-function spousesOf(id: number, marriages: Marriage[]) {
-  return marriages
-    .filter((item) => item.aId === id || item.bId === id)
-    .map((item) => ({ id: item.aId === id ? item.bId : item.aId, sortOrder: item.sortOrder }))
-    .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
-}
-
-function childLinks(id: number, parents: ParentLink[]) {
-  return parents
-    .filter((link) => link.parentId === id)
-    .sort((a, b) => a.sortOrder - b.sortOrder || a.childId - b.childId);
-}
-
-function descendantCount(id: number, parents: ParentLink[]) {
-  const seen = new Set<number>();
-  const stack = childLinks(id, parents).map((link) => link.childId);
-  while (stack.length) {
-    const current = stack.pop()!;
-    if (seen.has(current)) continue;
-    seen.add(current);
-    for (const link of childLinks(current, parents)) stack.push(link.childId);
-  }
-  return seen.size;
-}
-
-function preferRoot(a: number, b: number, counts: Map<number, number>) {
-  const da = counts.get(a) ?? 0;
-  const db = counts.get(b) ?? 0;
-  if (da !== db) return da > db ? a : b;
-  return Math.min(a, b);
-}
-
-export function rootIds(persons: Person[], parents: ParentLink[], marriages: Marriage[]) {
-  const hasParent = new Set(parents.map((link) => link.childId));
-  const counts = new Map(persons.map((person) => [person.id, descendantCount(person.id, parents)]));
-  const roots: number[] = [];
-  for (const person of persons) {
-    if (hasParent.has(person.id)) continue;
-    const side = spousesOf(person.id, marriages).some((spouse) => {
-      if (hasParent.has(spouse.id)) return true;
-      return preferRoot(person.id, spouse.id, counts) !== person.id;
-    });
-    if (!side) roots.push(person.id);
-  }
-  return roots.sort((a, b) => a - b);
-}
-
-function moveLine(line: DraftLine, dx: number, dy: number): DraftLine {
-  return {
-    ...line,
-    x1: line.x1 + dx,
-    y1: line.y1 + dy,
-    x2: line.x2 + dx,
-    y2: line.y2 + dy,
-    railY: line.railY == null ? undefined : line.railY + dy,
-    childY: line.childY == null ? undefined : line.childY + dy,
-    targets: line.targets?.map((x) => x + dx),
-  };
-}
-
-function moveFold(fold: LayoutFold, dx: number, dy: number): LayoutFold {
-  return { ...fold, x: fold.x + dx, y: fold.y + dy };
-}
-
-function marriageLines(cards: LayoutCard[]): DraftLine[] {
-  const lines: DraftLine[] = [];
-  for (let index = 0; index < cards.length - 1; index += 1) {
-    const left = cards[index];
-    const right = cards[index + 1];
-    const y = left.y + left.height / 2;
-    lines.push({
-      kind: 'marriage',
-      source: String(left.id),
-      target: String(right.id),
-      x1: left.x + left.width,
-      y1: y,
-      x2: right.x,
-      y2: y,
-    });
-  }
-  return lines;
-}
-
 function anchorOf(cards: LayoutCard[], key: number) {
   const main = cards[0];
   const side = key ? cards.find((card) => card.side && card.id === key) : undefined;
@@ -168,42 +86,6 @@ function anchorSource(cards: LayoutCard[], key: number, mainId: number) {
   return String(mainId);
 }
 
-function bloodLine(
-  anchorX: number,
-  anchorY: number,
-  railY: number,
-  childY: number,
-  targets: number[],
-  source: string,
-  target: string,
-): DraftLine {
-  return { kind: 'blood', source, target, x1: anchorX, y1: anchorY, x2: anchorX, y2: railY, railY, childY, targets };
-}
-
-function toPath(line: DraftLine): LayoutLine {
-  if (line.kind === 'marriage') {
-    const top = line.y1 - 1.5;
-    const bottom = line.y1 + 1.5;
-    return {
-      kind: 'marriage',
-      source: line.source,
-      target: line.target,
-      d: `M ${line.x1} ${top} H ${line.x2} M ${line.x1} ${bottom} H ${line.x2}`,
-    };
-  }
-  const targets = line.targets ?? [];
-  const railY = line.railY ?? line.y2;
-  const childY = line.childY ?? line.y2;
-  const minX = Math.min(line.x1, ...targets);
-  const maxX = Math.max(line.x1, ...targets);
-  let d = `M ${line.x1} ${line.y1} V ${railY}`;
-  if (maxX !== minX) d += ` M ${minX} ${railY} H ${maxX}`;
-  for (const x of targets) {
-    if (childY !== railY) d += ` M ${x} ${railY} V ${childY}`;
-  }
-  return { kind: 'blood', source: line.source, target: line.target, d };
-}
-
 export function layout(
   persons: Person[],
   parents: ParentLink[],
@@ -212,6 +94,7 @@ export function layout(
 ): LayoutResult {
   const byId = new Map(persons.map((person) => [person.id, person]));
   const roots = rootIds(persons, parents, marriages);
+  const rootSet = new Set(roots);
   const structural = new Set<number>();
   const pending = [...roots];
   while (pending.length) {
@@ -221,13 +104,26 @@ export function layout(
     for (const link of childLinks(id, parents)) pending.push(link.childId);
   }
 
-  function layoutUnit(id: number): Unit {
-    const row = [{ id, side: false, width: CARD_W, height: CARD_H }];
+  // 主卡与侧卡（含侧卡自己另配的人，如续弦）排成一行；已是根或在结构分支里的人有自己的位置，不重复
+  const collectRow = (id: number): RowCard[] => {
+    const row: RowCard[] = [{ id, side: false }];
+    const placed = new Set([id]);
     for (const spouse of spousesOf(id, marriages)) {
-      if (structural.has(spouse.id) || !byId.has(spouse.id)) continue;
-      row.push({ id: spouse.id, side: true, width: CARD_W, height: CARD_H });
+      if (structural.has(spouse.id) || rootSet.has(spouse.id) || !byId.has(spouse.id)) continue;
+      placed.add(spouse.id);
+      row.push({ id: spouse.id, side: true });
     }
-    const rowWidth = row.reduce((sum, card) => sum + card.width, 0) + SPOUSE_GAP * Math.max(0, row.length - 1);
+    for (let index = 1; index < row.length; index += 1) {
+      for (const co of spousesOf(row[index].id, marriages)) {
+        if (placed.has(co.id) || structural.has(co.id) || rootSet.has(co.id) || !byId.has(co.id)) continue;
+        placed.add(co.id);
+        row.push({ id: co.id, side: true });
+      }
+    }
+    return row;
+  };
+
+  const groupChildren = (id: number, row: RowCard[]) => {
     const spouseOrder = spousesOf(id, marriages).map((spouse) => spouse.id);
     const groups = new Map<number, number[]>();
     const seenChild = new Set<number>();
@@ -253,8 +149,6 @@ export function layout(
       if (!spouse.side) continue;
       for (const link of childLinks(spouse.id, parents)) addChild(link.childId, spouse.id);
     }
-    const hasChildren = seenChild.size > 0;
-    const folded = collapsed.has(id);
     const keys = [...groups.keys()].sort((a, b) => {
       if (a === 0) return 1;
       if (b === 0) return -1;
@@ -262,6 +156,15 @@ export function layout(
       const ib = spouseOrder.indexOf(b);
       return (ia < 0 ? 998 : ia) - (ib < 0 ? 998 : ib) || a - b;
     });
+    return { groups, keys };
+  };
+
+  function layoutUnit(id: number): Unit {
+    const row = collectRow(id);
+    const { groups, keys } = groupChildren(id, row);
+    const hasChildren = [...groups.values()].some((list) => list.length > 0);
+    const folded = collapsed.has(id);
+    const rowWidth = row.length * CARD_W + SPOUSE_GAP * (row.length - 1);
 
     const placeRow = (shift: number): LayoutCard[] => {
       let x = shift;
@@ -270,13 +173,13 @@ export function layout(
           id: card.id,
           x,
           y: 0,
-          width: card.width,
-          height: card.height,
+          width: CARD_W,
+          height: CARD_H,
           side: card.side,
           hasChildren: card.id === id && hasChildren,
           collapsed: card.id === id && folded,
         };
-        x += card.width + SPOUSE_GAP;
+        x += CARD_W + SPOUSE_GAP;
         return placed;
       });
     };

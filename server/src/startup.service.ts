@@ -13,11 +13,6 @@ export class StartupService implements OnModuleInit {
   ) {}
 
   async onModuleInit(): Promise<void> {
-    const secret = process.env.SESSION_SECRET ?? '';
-    if (secret.length < 32) {
-      console.error('SESSION_SECRET 至少需要 32 个字符');
-      process.exit(1);
-    }
     await this.dataSource.runMigrations();
     await this.auth.ensureBootstrapAccount();
     await this.seed.seedIfEmpty();

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { NButton, NModal, useMessage } from 'naive-ui';
 import PersonForm from './person-form.vue';
+import KinList from './kin-list.vue';
 import { ApiError } from '../api/client';
 import { ROLE_LABELS, SEX_LABELS, type ParentRole, type PersonDetail } from '../api/types';
 import { useTreeStore } from '../stores/tree';
@@ -62,6 +63,37 @@ function spouseLabel(id: number) {
   const sex = sexOf(id);
   return sex === 'female' ? '妻子' : sex === 'male' ? '丈夫' : '配偶';
 }
+
+const parentItems = computed(() =>
+  (props.detail?.parents ?? []).map((person) => ({
+    key: `${person.id}:${person.role}`,
+    id: person.id,
+    name: person.name,
+    sex: sexOf(person.id),
+    deceased: isDeceased(person.id),
+    label: ROLE_LABELS[person.role],
+  })),
+);
+const spouseItems = computed(() =>
+  (props.detail?.marriages ?? []).map((person) => ({
+    key: String(person.personId),
+    id: person.personId,
+    name: person.name,
+    sex: sexOf(person.personId),
+    deceased: isDeceased(person.personId),
+    label: spouseLabel(person.personId),
+  })),
+);
+const childItems = computed(() =>
+  (props.detail?.children ?? []).map((person) => ({
+    key: `${person.id}:${person.role}`,
+    id: person.id,
+    name: person.name,
+    sex: sexOf(person.id),
+    deceased: isDeceased(person.id),
+    label: childLabel(person),
+  })),
+);
 
 async function remove() {
   if (!props.detail) return;
@@ -139,57 +171,9 @@ function openPerson(id: number) {
         <p v-if="!visibleFields.length && detail.age == null" class="empty">暂无记述</p>
       </section>
 
-      <section v-if="detail.parents.length" class="kin-block">
-        <h3>父母</h3>
-        <div class="kin-list">
-          <button
-            v-for="person in detail.parents"
-            :key="person.id + person.role"
-            type="button"
-            class="kin-link"
-            :class="sexOf(person.id)"
-            @click="openPerson(person.id)"
-          >
-            <span class="k-name serif">{{ person.name }}</span>
-            <span v-if="isDeceased(person.id)" class="k-dot" title="已卒" />
-            <span class="k-role">{{ ROLE_LABELS[person.role] }}</span>
-          </button>
-        </div>
-      </section>
-      <section v-if="detail.marriages.length" class="kin-block">
-        <h3>配偶</h3>
-        <div class="kin-list">
-          <button
-            v-for="person in detail.marriages"
-            :key="person.personId"
-            type="button"
-            class="kin-link"
-            :class="sexOf(person.personId)"
-            @click="openPerson(person.personId)"
-          >
-            <span class="k-name serif">{{ person.name }}</span>
-            <span v-if="isDeceased(person.personId)" class="k-dot" title="已卒" />
-            <span class="k-role">{{ spouseLabel(person.personId) }}</span>
-          </button>
-        </div>
-      </section>
-      <section v-if="detail.children.length" class="kin-block">
-        <h3>子女</h3>
-        <div class="kin-list">
-          <button
-            v-for="person in detail.children"
-            :key="person.id + person.role"
-            type="button"
-            class="kin-link"
-            :class="sexOf(person.id)"
-            @click="openPerson(person.id)"
-          >
-            <span class="k-name serif">{{ person.name }}</span>
-            <span v-if="isDeceased(person.id)" class="k-dot" title="已卒" />
-            <span class="k-role">{{ childLabel(person) }}</span>
-          </button>
-        </div>
-      </section>
+      <kin-list v-if="parentItems.length" title="父母" :items="parentItems" @select="openPerson" />
+      <kin-list v-if="spouseItems.length" title="配偶" :items="spouseItems" @select="openPerson" />
+      <kin-list v-if="childItems.length" title="子女" :items="childItems" @select="openPerson" />
 
       <footer class="panel-foot">
         <n-button text type="error" @click="confirmDelete = true">删除人物</n-button>
@@ -250,8 +234,7 @@ h2 {
   gap: 4px;
   padding-top: 2px;
 }
-.block h3,
-.kin-block h3 {
+.block h3 {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -261,15 +244,12 @@ h2 {
   color: #6d6256;
   letter-spacing: 0.18em;
 }
-.block h3::before,
-.kin-block h3::before {
+.block h3::before {
   content: '';
   width: 3px;
   height: 12px;
   background: #cfc0ab;
 }
-.kin-block + .kin-block,
-.kin-block,
 .block {
   margin-top: 20px;
 }
@@ -295,52 +275,6 @@ h2 {
   margin: 0;
   font-size: 13px;
   color: #a39a8b;
-}
-.kin-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.kin-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  padding: 7px 12px;
-  border: 1px solid #e4d8c8;
-  border-left-width: 3px;
-  border-radius: 2px;
-  background: #fffdf8;
-  color: #24302c;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.kin-link:hover {
-  border-color: #c9bba8;
-  box-shadow: 0 1px 3px rgba(36, 48, 44, 0.07);
-}
-.kin-link.male {
-  border-left-color: #2f6b52;
-}
-.kin-link.female {
-  border-left-color: #9c4036;
-}
-.k-name {
-  font-size: 14px;
-  line-height: 1.5;
-}
-.k-dot {
-  flex: none;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #1c1c1c;
-}
-.k-role {
-  margin-left: auto;
-  font-size: 12px;
-  color: #8a7d6d;
 }
 .panel-foot {
   margin-top: 28px;
