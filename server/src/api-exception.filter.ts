@@ -12,11 +12,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
         response.status(status).json({ error: body });
         return;
       }
-      const record = body as { error?: string; ok?: boolean; fields?: Record<string, string>; message?: unknown };
-      if (record.ok === false) {
-        response.status(status).json({ ok: false });
-        return;
-      }
+      const record = body as { error?: string; fields?: Record<string, string>; message?: unknown };
       const error =
         record.error ??
         (Array.isArray(record.message) ? '提交的内容无法识别' : undefined) ??

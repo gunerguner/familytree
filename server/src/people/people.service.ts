@@ -162,6 +162,7 @@ export class PeopleService {
     }
     return {
       name,
+      sex: input.sex,
       kinship: blank(input.kinship),
       formerName: blank(input.formerName),
       nickname: blank(input.nickname),
@@ -282,6 +283,7 @@ export class PeopleService {
     return {
       id: person.id,
       name: person.name,
+      sex: person.sex,
       kinship: person.kinship,
       formerName: person.formerName,
       nickname: person.nickname,

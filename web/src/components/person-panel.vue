@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { NButton, NModal, useMessage } from 'naive-ui';
 import PersonForm from './person-form.vue';
 import { ApiError } from '../api/client';
-import { ROLE_LABELS, type PersonDetail } from '../api/types';
+import { ROLE_LABELS, SEX_LABELS, type PersonDetail } from '../api/types';
 import { useTreeStore } from '../stores/tree';
 
 const props = defineProps<{
@@ -57,7 +57,10 @@ function openPerson(id: number) {
 <template>
   <div class="panel">
     <header class="panel-head">
-      <h2 class="serif">{{ creating ? '新建人物' : detail?.name }}</h2>
+      <h2 class="serif">
+        {{ creating ? '新建人物' : detail?.name }}
+        <span v-if="detail && !creating && !editing" class="sex" :class="detail.sex">{{ SEX_LABELS[detail.sex] }}</span>
+      </h2>
       <div class="head-actions">
         <n-button v-if="detail && !editing && !creating" size="small" @click="emit('edit')">修改</n-button>
         <n-button size="small" quaternary @click="emit('close')">关闭</n-button>
@@ -73,6 +76,8 @@ function openPerson(id: number) {
 
     <template v-else-if="detail">
       <dl class="field-list">
+        <dt>性别</dt>
+        <dd>{{ SEX_LABELS[detail.sex] }}</dd>
         <template v-for="[label, key] in fields" :key="key">
           <dt>{{ label }}</dt>
           <dd>{{ text(key) }}</dd>
@@ -123,6 +128,17 @@ h2 {
   margin: 0;
   font-size: 24px;
   font-weight: 500;
+}
+.sex {
+  margin-left: 8px;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.sex.male {
+  color: #3d6b58;
+}
+.sex.female {
+  color: #9c4036;
 }
 .head-actions {
   display: flex;

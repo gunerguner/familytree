@@ -7,6 +7,8 @@ import { Marriage } from '../people/marriage.entity';
 import { ParentLink } from '../people/parent-link.entity';
 import { Person } from '../people/person.entity';
 import { InitMigration } from './init.migration';
+import { SexBrotherInLawMigration } from './sex-brother-in-law.migration';
+import { SexMigration } from './sex.migration';
 
 export function createDataSource(): DataSource {
   const database = process.env.DATABASE_PATH;
@@ -20,7 +22,7 @@ export function createDataSource(): DataSource {
     type: 'better-sqlite3',
     database,
     entities: [Person, ParentLink, Marriage, Account, Session],
-    migrations: [InitMigration],
+    migrations: [InitMigration, SexMigration, SexBrotherInLawMigration],
   });
 }
 

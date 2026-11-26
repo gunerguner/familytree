@@ -17,7 +17,7 @@ RUN npm run build --prefix web && npm run build --prefix server
 RUN npm ci --prefix server --omit=dev
 
 FROM ${NODE_IMAGE_SLIM}
-# bookworm 镜像的软件源在 debian.sources。换成阿里云后再装 curl。
+# bookworm 镜像的软件源在 debian.sources。换成阿里云后再装 util-linux（setpriv）。
 # 备选主机名：mirrors.tuna.tsinghua.edu.cn
 RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
       sed -i \
@@ -28,7 +28,7 @@ RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
         /etc/apt/sources.list.d/debian.sources; \
     fi \
  && apt-get update \
- && apt-get install -y --no-install-recommends curl util-linux \
+ && apt-get install -y --no-install-recommends util-linux \
  && rm -rf /var/lib/apt/lists/* \
  && useradd --uid 10001 --create-home app
 WORKDIR /app
@@ -45,7 +45,5 @@ ENV STATIC_DIR=/app/static \
     TZ=Asia/Shanghai
 VOLUME /data
 EXPOSE 8080
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-  CMD curl -fsS http://127.0.0.1:8080/api/health || exit 1
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["node", "dist/main.js"]

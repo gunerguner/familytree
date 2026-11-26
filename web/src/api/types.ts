@@ -1,6 +1,14 @@
+export type Sex = 'male' | 'female';
+
+export const SEX_LABELS: Record<Sex, string> = {
+  male: '男',
+  female: '女',
+};
+
 export interface Person {
   id: number;
   name: string;
+  sex: Sex;
   kinship: string | null;
   formerName: string | null;
   nickname: string | null;
@@ -49,6 +57,7 @@ export interface PersonDetail extends Person {
 
 export interface PersonInput {
   name: string;
+  sex: Sex;
   kinship: string | null;
   formerName: string | null;
   nickname: string | null;

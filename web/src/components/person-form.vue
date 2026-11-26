@@ -2,7 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { NButton, NForm, NFormItem, NInput, NInputNumber, NSelect, useMessage } from 'naive-ui';
 import { ApiError } from '../api/client';
-import { ROLE_LABELS, type ParentRole, type Person, type PersonDetail, type PersonInput } from '../api/types';
+import { ROLE_LABELS, SEX_LABELS, type ParentRole, type Person, type PersonDetail, type PersonInput, type Sex } from '../api/types';
 import { useTreeStore } from '../stores/tree';
 
 const props = defineProps<{
@@ -14,7 +14,13 @@ const tree = useTreeStore();
 const message = useMessage();
 const pending = ref(false);
 const nameError = ref('');
+const sexError = ref('');
 const fieldErrors = ref<Record<string, string>>({});
+
+const sexes = (Object.keys(SEX_LABELS) as Sex[]).map((value) => ({
+  label: SEX_LABELS[value],
+  value,
+}));
 
 const roles = (Object.keys(ROLE_LABELS) as ParentRole[]).map((value) => ({
   label: ROLE_LABELS[value],
@@ -23,6 +29,7 @@ const roles = (Object.keys(ROLE_LABELS) as ParentRole[]).map((value) => ({
 
 const form = reactive({
   name: '',
+  sex: null as Sex | null,
   kinship: '',
   formerName: '',
   nickname: '',
@@ -37,6 +44,7 @@ watch(
   () => props.detail,
   (detail) => {
     form.name = detail?.name ?? '';
+    form.sex = detail?.sex ?? null;
     form.kinship = detail?.kinship ?? '';
     form.formerName = detail?.formerName ?? '';
     form.nickname = detail?.nickname ?? '';
@@ -54,6 +62,7 @@ watch(
       sortOrder: item.sortOrder,
     }));
     nameError.value = '';
+    sexError.value = '';
     fieldErrors.value = {};
   },
   { immediate: true },
@@ -77,9 +86,14 @@ function emptyToNull(value: string) {
 
 async function submit() {
   nameError.value = '';
+  sexError.value = '';
   fieldErrors.value = {};
   if (!form.name.trim()) {
     nameError.value = '请填写姓名';
+    return;
+  }
+  if (!form.sex) {
+    sexError.value = '请选择性别';
     return;
   }
   if (form.parents.some((row) => row.personId == null) || form.marriages.some((row) => row.personId == null)) {
@@ -88,6 +102,7 @@ async function submit() {
   }
   const input: PersonInput = {
     name: form.name.trim(),
+    sex: form.sex,
     kinship: emptyToNull(form.kinship),
     formerName: emptyToNull(form.formerName),
     nickname: emptyToNull(form.nickname),
@@ -127,6 +142,9 @@ async function submit() {
   <n-form @submit.prevent="submit">
     <n-form-item label="姓名" :validation-status="nameError || fieldErrors.name ? 'error' : undefined" :feedback="nameError || fieldErrors.name">
       <n-input v-model:value="form.name" />
+    </n-form-item>
+    <n-form-item label="性别" :validation-status="sexError || fieldErrors.sex ? 'error' : undefined" :feedback="sexError || fieldErrors.sex">
+      <n-select v-model:value="form.sex" :options="sexes" />
     </n-form-item>
     <n-form-item label="称谓">
       <n-input v-model:value="form.kinship" />

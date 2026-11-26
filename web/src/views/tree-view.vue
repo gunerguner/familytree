@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { NCard, NDrawer, NLayoutHeader, NButton, useMessage } from 'naive-ui';
+import { NDrawer, NDrawerContent, NLayoutHeader, NButton, useMessage } from 'naive-ui';
 import PersonPanel from '../components/person-panel.vue';
 import TreeCanvas from '../components/tree-canvas.vue';
 import { ApiError } from '../api/client';
@@ -14,7 +14,6 @@ const session = useSessionStore();
 const tree = useTreeStore();
 const message = useMessage();
 const editing = ref(false);
-const narrow = ref(false);
 
 const personId = computed(() => {
   const raw = Array.isArray(route.query.person) ? route.query.person[0] : route.query.person;
@@ -70,19 +69,9 @@ async function saved(id: number) {
   await router.replace({ path: '/', query: { person: String(id) } });
 }
 
-let media: MediaQueryList | null = null;
-function applyMedia() {
-  narrow.value = media?.matches ?? false;
-}
-
 onMounted(() => {
   void tree.loadTree();
-  media = window.matchMedia('(max-width: 767px)');
-  applyMedia();
-  media.addEventListener('change', applyMedia);
 });
-
-onUnmounted(() => media?.removeEventListener('change', applyMedia));
 </script>
 
 <template>
@@ -105,27 +94,25 @@ onUnmounted(() => media?.removeEventListener('change', applyMedia));
         @toggle="tree.toggle"
         @create="createPerson"
       />
-      <n-card v-if="showPanel && !narrow" class="side" content-style="overflow: auto">
-        <person-panel
-          :detail="tree.detail"
-          :creating="creating"
-          :editing="editing"
-          @edit="editing = true"
-          @close="closePanel"
-          @cancel-edit="editing = false"
-          @saved="saved"
-        />
-      </n-card>
-      <n-drawer v-if="narrow" :show="showPanel" placement="bottom" :height="'86vh'" @update:show="(show) => !show && closePanel()">
-        <person-panel
-          :detail="tree.detail"
-          :creating="creating"
-          :editing="editing"
-          @edit="editing = true"
-          @close="closePanel"
-          @cancel-edit="editing = false"
-          @saved="saved"
-        />
+      <n-drawer
+        :show="showPanel"
+        placement="right"
+        :width="'min(24rem, calc(100vw - 3rem))'"
+        show-mask="transparent"
+        :content-style="{ background: '#fffcf7' }"
+        @update:show="(show) => { if (!show) closePanel(); }"
+      >
+        <n-drawer-content :body-content-style="{ padding: '20px 22px 32px' }">
+          <person-panel
+            :detail="tree.detail"
+            :creating="creating"
+            :editing="editing"
+            @edit="editing = true"
+            @close="closePanel"
+            @cancel-edit="editing = false"
+            @saved="saved"
+          />
+        </n-drawer-content>
       </n-drawer>
     </div>
   </div>
@@ -157,17 +144,9 @@ onUnmounted(() => media?.removeEventListener('change', applyMedia));
   color: #5c6b64;
 }
 .body {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
-}
-.side {
-  width: 24rem;
-  flex: none;
-  border-radius: 0;
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 0;
-  overflow: auto;
 }
 </style>

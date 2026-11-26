@@ -8,6 +8,9 @@ export class Person {
   @Column({ type: 'text' })
   name!: string;
 
+  @Column({ type: 'text' })
+  sex!: 'male' | 'female';
+
   @Column({ type: 'text', nullable: true })
   kinship!: string | null;
 

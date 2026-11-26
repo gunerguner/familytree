@@ -5,6 +5,7 @@ function person(id: number, name: string): Person {
   return {
     id,
     name,
+    sex: 'male',
     kinship: null,
     formerName: null,
     nickname: null,
@@ -22,7 +23,11 @@ const emptyMarriages: Marriage[] = [];
 
 describe('layout', () => {
   it('keeps a childless spouse beside the person who has the descendants', () => {
-    const persons = [person(1, '张尔寿'), person(2, '范氏'), person(3, '张伯森')];
+    const persons = [
+      person(1, '张尔寿'),
+      { ...person(2, '范氏'), deceased: true, birthYear: 1920, age: 80 },
+      person(3, '张伯森'),
+    ];
     const parents: ParentLink[] = [
       { childId: 3, parentId: 1, role: 'father', sortOrder: 0 },
       { childId: 3, parentId: 2, role: 'mother', sortOrder: 0 },
@@ -32,6 +37,17 @@ describe('layout', () => {
     const result = layout(persons, parents, marriages, new Set());
     expect(result.cards.filter((card) => !card.side).map((card) => card.id)).toEqual([1, 3]);
     expect(result.cards.find((card) => card.id === 2)?.side).toBe(true);
+    expect(new Set(result.cards.map((card) => card.width))).toEqual(new Set([112]));
+    expect(new Set(result.cards.map((card) => card.height))).toEqual(new Set([48]));
+    expect(result.lines.some((line) => line.kind === 'marriage')).toBe(true);
+    expect(result.lines.some((line) => line.kind === 'blood')).toBe(true);
+    const couple = result.lines.find((line) => line.kind === 'marriage')!;
+    expect(couple.d).toContain('H');
+    expect(couple.source).toBe('1');
+    expect(couple.target).toBe('2');
+    const blood = result.lines.find((line) => line.kind === 'blood')!;
+    expect(blood.source).toBe('2');
+    expect(blood.target).toBe('fold:1');
   });
 
   it('places disconnected people on one row', () => {
@@ -51,6 +67,8 @@ describe('layout', () => {
     expect(result.cards.some((card) => card.id === 2)).toBe(false);
     expect(result.cards.some((card) => card.id === 3)).toBe(true);
     expect(result.cards.some((card) => card.id === 1)).toBe(true);
+    expect(result.folds).toEqual([expect.objectContaining({ id: 1, collapsed: true })]);
+    expect(result.lines.find((line) => line.kind === 'blood')).toMatchObject({ source: '1', target: 'fold:1' });
   });
 
   it('turns a child into a root after the parent link is gone', () => {

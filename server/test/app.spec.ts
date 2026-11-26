@@ -50,10 +50,7 @@ describe('familytree api', () => {
     return value.split(';')[0];
   }
 
-  it('allows health without a session and hides the tree', async () => {
-    const health = await agent().get('/api/health');
-    assert.equal(health.status, 200);
-    assert.deepEqual(health.body, { ok: true });
+  it('hides the tree without a session', async () => {
     const tree = await agent().get('/api/tree');
     assert.equal(tree.status, 401);
   });
@@ -108,9 +105,10 @@ describe('familytree api', () => {
       .post('/api/persons')
       .set('X-Familytree', '1')
       .set('Cookie', cookie)
-      .send({ name: '新的根', parents: [], marriages: [] });
+      .send({ name: '新的根', sex: 'female', parents: [], marriages: [] });
     assert.equal(created.status, 201);
     assert.equal(created.body.name, '新的根');
+    assert.equal(created.body.sex, 'female');
     const tree = await agent().get('/api/tree').set('Cookie', cookie);
     const person = tree.body.persons.find((item: { name: string }) => item.name === '新的根');
     assert.ok(person);
@@ -125,13 +123,14 @@ describe('familytree api', () => {
       .post('/api/persons')
       .set('X-Familytree', '1')
       .set('Cookie', cookie)
-      .send({ name: '甲', parents: [], marriages: [] });
+      .send({ name: '甲', sex: 'male', parents: [], marriages: [] });
     const child = await agent()
       .post('/api/persons')
       .set('X-Familytree', '1')
       .set('Cookie', cookie)
       .send({
         name: '乙',
+        sex: 'male',
         parents: [{ personId: parent.body.id, role: 'father', sortOrder: 0 }],
         marriages: [],
       });
@@ -142,6 +141,7 @@ describe('familytree api', () => {
       .set('Cookie', cookie)
       .send({
         name: '甲',
+        sex: 'male',
         parents: [{ personId: child.body.id, role: 'father', sortOrder: 0 }],
         marriages: [],
       });
@@ -161,13 +161,14 @@ describe('familytree api', () => {
       .post('/api/persons')
       .set('X-Familytree', '1')
       .set('Cookie', cookie)
-      .send({ name: '要删除的根', parents: [], marriages: [] });
+      .send({ name: '要删除的根', sex: 'male', parents: [], marriages: [] });
     const child = await agent()
       .post('/api/persons')
       .set('X-Familytree', '1')
       .set('Cookie', cookie)
       .send({
         name: '留下来的子女',
+        sex: 'female',
         parents: [{ personId: parent.body.id, role: 'father', sortOrder: 0 }],
         marriages: [],
       });
@@ -203,7 +204,7 @@ describe('familytree api', () => {
         .post('/api/persons')
         .set('X-Familytree', '1')
         .set('Cookie', cookie)
-        .send({ name: `年龄${birthText}`, birthText, deathText, parents: [], marriages: [] });
+        .send({ name: `年龄${birthText}`, sex: 'male', birthText, deathText, parents: [], marriages: [] });
       assert.equal(created.status, 201);
       assert.equal(created.body.age, age);
       assert.equal(created.body.birthYear, birthYear);

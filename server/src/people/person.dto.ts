@@ -34,9 +34,15 @@ export class MarriageInput {
   sortOrder?: number;
 }
 
+export const SEXES = ['male', 'female'] as const;
+export type Sex = (typeof SEXES)[number];
+
 export class PersonInput {
   @IsString()
   name!: string;
+
+  @IsIn(SEXES)
+  sex!: Sex;
 
   @IsOptional()
   @IsString()

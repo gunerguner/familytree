@@ -11,6 +11,7 @@ import { Person } from '../people/person.entity';
 interface SeedPerson {
   key: string;
   name: string;
+  sex: 'male' | 'female';
   kinship: string | null;
   formerName: string | null;
   nickname: string | null;
@@ -43,6 +44,7 @@ export class SeedService {
         const saved = await manager.save(
           manager.create(Person, {
             name: person.name,
+            sex: person.sex,
             kinship: person.kinship,
             formerName: person.formerName,
             nickname: person.nickname,
