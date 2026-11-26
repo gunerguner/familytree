@@ -36,7 +36,7 @@ COPY --from=build /src/server/node_modules ./node_modules
 COPY --from=build /src/server/dist ./dist
 COPY --from=build /src/server/seed ./seed
 COPY --from=build /src/web/dist ./static
-COPY deploy/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENV STATIC_DIR=/app/static \
     DATABASE_PATH=/data/familytree.db \

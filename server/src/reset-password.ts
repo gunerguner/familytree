@@ -9,8 +9,8 @@ async function main() {
   applyDefaults();
   const username = process.env.RESET_USERNAME ?? '';
   const password = process.env.RESET_PASSWORD ?? '';
-  if (!username || password.length < 8) {
-    console.error('RESET_USERNAME 与至少 8 位的 RESET_PASSWORD 都要提供');
+  if (!username || !password) {
+    console.error('RESET_USERNAME 与 RESET_PASSWORD 都要提供');
     process.exit(1);
   }
   const dataSource: DataSource = await openDataSource();

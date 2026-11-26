@@ -38,7 +38,7 @@ export class AuthService {
     if (count > 0) return;
     const username = process.env.BOOTSTRAP_USERNAME ?? '';
     const password = process.env.BOOTSTRAP_PASSWORD ?? '';
-    if (!username || !password || username.length > 32 || password.length < 8) {
+    if (!username || !password || username.length > 32) {
       this.logger.error('还没有账号，且引导用户名或密码不符合要求');
       process.exit(1);
     }

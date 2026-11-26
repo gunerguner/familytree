@@ -9,7 +9,7 @@ const props = defineProps<{
   detail: PersonDetail | null;
 }>();
 
-const emit = defineEmits<{ cancel: []; saved: [id: number] }>();
+const emit = defineEmits<{ saved: [id: number] }>();
 const tree = useTreeStore();
 const message = useMessage();
 const pending = ref(false);
@@ -136,6 +136,8 @@ async function submit() {
     pending.value = false;
   }
 }
+
+defineExpose({ submit });
 </script>
 
 <template>
@@ -184,11 +186,6 @@ async function submit() {
       </div>
       <n-button text @click="form.marriages.push({ personId: null, label: '', sortOrder: form.marriages.length })">添加配偶</n-button>
     </section>
-
-    <div class="actions">
-      <n-button type="primary" attr-type="submit" :loading="pending" :disabled="pending">保存</n-button>
-      <n-button @click="emit('cancel')">取消</n-button>
-    </div>
   </n-form>
 </template>
 
@@ -205,9 +202,5 @@ async function submit() {
   grid-template-columns: 1fr 7rem 6rem auto;
   gap: 8px;
   width: 100%;
-}
-.actions {
-  display: flex;
-  gap: 8px;
 }
 </style>

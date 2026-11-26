@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { Panel, VueFlow, type NodeMouseEvent, type VueFlowInstance } from '@xyflow/vue';
 import '@xyflow/vue/dist/style.css';
 import type { Marriage, ParentLink, Person } from '../api/types';
@@ -31,12 +31,27 @@ watch(
   (value) => {
     flow.value?.setNodes(value.nodes);
     flow.value?.setEdges(value.edges);
+    // 折叠/展开会让布局整体重排；把视口平滑居中到刚被点击的人物上，避免视野丢失。
+    if (focusPersonId.value == null) return;
+    const id = String(focusPersonId.value);
+    focusPersonId.value = null;
+    const node = value.nodes.find((item) => item.id === id);
+    if (!node || !flow.value) return;
+    const width = node.width ?? 112;
+    const height = node.height ?? 48;
+    const { zoom } = flow.value.getViewport();
+    void nextTick(() => {
+      flow.value?.setCenter(node.position.x + width / 2, node.position.y + height / 2, { zoom, duration: 250 });
+    });
   },
   { flush: 'post' },
 );
 
+const focusPersonId = ref<number | null>(null);
+
 function onNodeClick({ node }: NodeMouseEvent<FlowNode>) {
   if (node.type === 'fold') {
+    focusPersonId.value = node.data.personId;
     emit('toggle', node.data.personId);
     return;
   }

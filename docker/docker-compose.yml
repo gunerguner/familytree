@@ -2,16 +2,14 @@ services:
   familytree:
     build:
       context: ..
-      dockerfile: deploy/Dockerfile
+      dockerfile: docker/Dockerfile
     image: familytree:local
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8084:8080"
     env_file: .env
     volumes:
-      - familytree-data:/data
+      - ${SQLITE_HOST_DIR:-./sqlitefile}:/data
     read_only: true
     tmpfs:
       - /tmp
-volumes:
-  familytree-data:
