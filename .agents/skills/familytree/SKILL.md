@@ -7,7 +7,7 @@ description: 族谱 Web 应用的开发约定。用于在本仓库改 NestJS 人
 
 本技能用于在 familytree 仓库内做开发：保持人物、亲子、婚姻三张事实表和会话的约定，前端一次取全树、在浏览器里排多棵根，以及单容器同时提供页面和 `/api`。
 
-需求以 `docs/需求描述.md` 为准。实现与 `docs/技术设计*.md` 不一致时，以当前代码为准（已有 `sex`、画布用 Vue Flow、没有 `/api/health`）。
+需求以 `docs/需求描述.md` 为准。实现与 `docs/技术设计*.md` 不一致时，以当前代码为准（已有 `sex`、画布用 Vue Flow）。不提供 `/api/health`，部署自检只看首页。
 
 ## Quick Reference
 
