@@ -43,8 +43,14 @@ export const useTreeStore = defineStore('tree', {
         body: JSON.stringify(input),
       });
       this.detail = detail;
-      await this.loadTree();
-      return detail;
+      let refreshed = true;
+      try {
+        await this.loadTree();
+      } catch {
+        // 保存已成功，列表刷新失败时不抛错，避免表单误报保存失败导致重复创建
+        refreshed = false;
+      }
+      return { detail, refreshed };
     },
     async removePerson(id: number) {
       await api(`/api/persons/${id}`, { method: 'DELETE' });

@@ -1,10 +1,13 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Response } from 'express';
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(ApiExceptionFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
+    const request = host.switchToHttp().getRequest<{ method?: string; url?: string }>();
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const body = exception.getResponse();
@@ -22,6 +25,10 @@ export class ApiExceptionFilter implements ExceptionFilter {
       response.status(status).json(payload);
       return;
     }
+    this.logger.error(
+      `${request?.method ?? '?'} ${request?.url ?? '?'} -> 500`,
+      exception instanceof Error ? exception.stack : String(exception),
+    );
     response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: '服务暂时不可用' });
   }
 }

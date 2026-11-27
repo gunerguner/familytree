@@ -55,6 +55,9 @@ export interface PersonDetail extends Person {
   children: { id: number; name: string; role: ParentRole; sortOrder: number }[];
 }
 
+// 新建人物时可预填亲属关系的草稿（无 id，保存走 POST /api/persons）
+export type PersonDraft = { id?: number } & Partial<Omit<PersonDetail, 'id'>>;
+
 export interface PersonInput {
   name: string;
   sex: Sex;

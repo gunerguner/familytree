@@ -69,7 +69,7 @@ const emit = defineEmits<{ select: [id: number] }>();
   gap: 6px;
   width: 100%;
   padding: 7px 12px;
-  border: 1px solid #e4d8c8;
+  border: 1px solid var(--color-border);
   border-left-width: 3px;
   border-radius: 2px;
   background: #fffdf8;
@@ -86,7 +86,7 @@ const emit = defineEmits<{ select: [id: number] }>();
   border-left-color: #2f6b52;
 }
 .kin-link.female {
-  border-left-color: #9c4036;
+  border-left-color: var(--color-accent);
 }
 .k-name {
   font-size: 14px;
@@ -102,6 +102,6 @@ const emit = defineEmits<{ select: [id: number] }>();
 .k-role {
   margin-left: auto;
   font-size: 12px;
-  color: #8a7d6d;
+  color: var(--color-muted);
 }
 </style>

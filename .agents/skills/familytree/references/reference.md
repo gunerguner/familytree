@@ -202,9 +202,9 @@ Cookie 名 `familytree_session`。值是 `base64url(32 字节随机数) + "." + 
 
 路由：`/` 族谱，`/login` 登录。打开某人用 `/?person=<id>`，新建用 `/?create=1`（两者同时存在时以新建为准）。id 不是正整数则忽略。
 
-详情在桌面是右侧卡片，宽度小于 768px 时改为底部抽屉。空字段留标签、右边空白，不写「未知」。`age === null` 时不出现年龄行。卡片第二行只在有 `birthYear`、「已卒」或数字年龄时出现。
+详情面板是右侧 `NDrawer`（桌面与窄屏一致；窄屏底部抽屉等移动端单独适配）。空字段直接省略，全部为空时显示「暂无记述」，不写「未知」。`age === null` 时不出现年龄行。卡片第二行只在有 `birthYear`、「已卒」或数字年龄时出现。
 
-保存成功后用返回的详情更新面板，再 `loadTree()`。删除成功后关掉面板并重新取树。
+保存成功后用返回的详情更新面板，再 `loadTree()`；`loadTree()` 失败不影响保存结果，提示「已保存，但列表刷新失败」。删除成功后关掉面板并重新取树。
 
 ---
 
@@ -263,7 +263,7 @@ npm、better-sqlite3 预编译包、Node 头文件、Docker 基础镜像和 Debi
 | 后端 HTTP | `server/test/app.spec.ts`（编译后 `node --test`） | 同上。临时 SQLite，不碰开发库 |
 | 前端布局与 flow | `web/test/*.test.ts`（Vitest） | `cd web && npm test` |
 
-`app.spec.ts` 在 import 应用之前设置 `DATABASE_PATH`、`SESSION_SECRET`、引导账号。HTTP 用例要带 `X-Familytree: 1`。契约断言看状态码和 `{ error, fields? }`，不要断言 Astock 那种 `{ code, message, data }`。
+`app.spec.ts` 在 import 应用之前设置 `DATABASE_PATH`、`SESSION_SECRET`、引导账号。HTTP 用例要带 `X-Familytree: 1`。契约断言只看状态码和 `{ error, fields? }`。
 
 新增接口补一条成功和一条失败。改 `rootIds` 或折叠时补 `web/test/layout.test.ts`。修 bug 先写能复现的用例。
 

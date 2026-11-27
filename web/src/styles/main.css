@@ -1,3 +1,12 @@
+:root {
+  --color-ink: #3d6b58;
+  --color-accent: #9c4036;
+  --color-line: #a89884;
+  --color-border: #e4d8c8;
+  --color-paper: #fffcf7;
+  --color-muted: #8a7d6d;
+}
+
 html,
 body,
 #app,
@@ -22,7 +31,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid #e4d8c8;
+  border: 1px solid var(--color-border);
   border-radius: 2px;
   background: #fffdf8;
   color: #24302c;
@@ -32,8 +41,8 @@ body {
 }
 
 .tree-card.selected {
-  border-color: #3d6b58;
-  box-shadow: 0 0 0 1px #3d6b58;
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 1px var(--color-ink);
 }
 
 .tree-card .name {
@@ -52,7 +61,7 @@ body {
 }
 
 .tree-card.female {
-  border-left: 4px solid #9c4036;
+  border-left: 4px solid var(--color-accent);
 }
 
 .tree-card .deceased {

@@ -172,7 +172,8 @@ export class PeopleService {
     };
   }
 
-  private async replaceRelations(manager: EntityManager, id: number, input: PersonInput) {
+  // 校验父母/配偶引用：不能重复、不能指向自己、引用的人都必须存在
+  private async assertRelationsValid(manager: EntityManager, id: number, input: PersonInput) {
     const parentIds = input.parents.map((item) => item.personId);
     const spouseIds = input.marriages.map((item) => item.personId);
     if (new Set(parentIds).size !== parentIds.length) {
@@ -202,6 +203,10 @@ export class PeopleService {
         throw new UnprocessableEntityException({ error: '引用的人物不存在' });
       }
     }
+  }
+
+  // 用提交内容整体替换此人的父母链接与婚姻记录
+  private async writeRelations(manager: EntityManager, id: number, input: PersonInput) {
     await manager.createQueryBuilder().delete().from(ParentLink).where('child_id = :id', { id }).execute();
     await manager
       .createQueryBuilder()
@@ -236,6 +241,11 @@ export class PeopleService {
         ),
       );
     }
+  }
+
+  private async replaceRelations(manager: EntityManager, id: number, input: PersonInput) {
+    await this.assertRelationsValid(manager, id, input);
+    await this.writeRelations(manager, id, input);
     if (await this.hasCycle(manager)) {
       throw new ConflictException({ error: '这样会把祖先收成自己的后代' });
     }

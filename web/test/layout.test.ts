@@ -1,4 +1,4 @@
-import { layout } from '../src/lib/layout';
+import { layout, CARD_H, CARD_W } from '../src/lib/layout';
 import { rootIds } from '../src/lib/graph';
 import type { Marriage, ParentLink, Person } from '../src/api/types';
 
@@ -38,8 +38,8 @@ describe('layout', () => {
     const result = layout(persons, parents, marriages, new Set());
     expect(result.cards.filter((card) => !card.side).map((card) => card.id)).toEqual([1, 3]);
     expect(result.cards.find((card) => card.id === 2)?.side).toBe(true);
-    expect(new Set(result.cards.map((card) => card.width))).toEqual(new Set([112]));
-    expect(new Set(result.cards.map((card) => card.height))).toEqual(new Set([48]));
+    expect(new Set(result.cards.map((card) => card.width))).toEqual(new Set([CARD_W]));
+    expect(new Set(result.cards.map((card) => card.height))).toEqual(new Set([CARD_H]));
     expect(result.lines.some((line) => line.kind === 'marriage')).toBe(true);
     expect(result.lines.some((line) => line.kind === 'blood')).toBe(true);
     const couple = result.lines.find((line) => line.kind === 'marriage')!;
@@ -108,5 +108,30 @@ describe('layout', () => {
   it('turns a child into a root after the parent link is gone', () => {
     const persons = [person(1, '父'), person(2, '子')];
     expect(rootIds(persons, emptyParents, emptyMarriages)).toEqual([1, 2]);
+  });
+
+  it('places a shared child only once when both parents are roots', () => {
+    const persons = [person(1, '父'), person(2, '母'), person(3, '子')];
+    const parents: ParentLink[] = [
+      { childId: 3, parentId: 1, role: 'father', sortOrder: 0 },
+      { childId: 3, parentId: 2, role: 'mother', sortOrder: 0 },
+    ];
+    const result = layout(persons, parents, emptyMarriages, new Set());
+    const ids = result.cards.map((card) => card.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids).toContain(3);
+    expect(result.roots).toEqual([1, 2]);
+    expect(result.lines.filter((line) => line.kind === 'blood')).toHaveLength(1);
+  });
+
+  it('does not repeat a spouse shared by two root trees', () => {
+    const persons = [person(1, '根甲'), person(2, '根乙'), person(3, '共妻')];
+    const marriages: Marriage[] = [
+      { id: 1, aId: 1, bId: 3, label: '妻子', sortOrder: 0 },
+      { id: 2, aId: 2, bId: 3, label: '妻子', sortOrder: 0 },
+    ];
+    const result = layout(persons, emptyParents, marriages, new Set());
+    const ids = result.cards.map((card) => card.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });

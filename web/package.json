@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "eslint src test",
+    "format": "prettier --write src test"
   },
   "dependencies": {
     "@xyflow/vue": "^2.0.3",
@@ -16,8 +18,17 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.19.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.9.0",
+    "@vue/test-utils": "^2.6.0",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.12.1",
+    "happy-dom": "^21.0.4",
+    "prettier": "^3.10.1",
     "typescript": "^5.9.3",
     "vite": "^7.3.8",
     "vitest": "^3.2.4",

@@ -3,11 +3,11 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { INestApplication, ValidationPipe, BadRequestException } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { ApiExceptionFilter } from '../src/api-exception.filter';
+import { configureApp } from '../src/app-setup';
 
 const dir = mkdtempSync(join(tmpdir(), 'familytree-'));
 process.env.DATABASE_PATH = join(dir, 'test.sqlite');
@@ -25,15 +25,7 @@ describe('familytree api', () => {
   before(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
-    app.setGlobalPrefix('api');
-    app.useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        transform: true,
-        exceptionFactory: () => new BadRequestException({ error: '提交的内容无法识别' }),
-      }),
-    );
-    app.useGlobalFilters(new ApiExceptionFilter());
+    configureApp(app);
     await app.init();
   });
 
@@ -187,6 +179,44 @@ describe('familytree api', () => {
       ),
       false,
     );
+  });
+
+  it('rejects mutations without the custom header', async () => {
+    const created = await agent()
+      .post('/api/persons')
+      .set('Cookie', cookie)
+      .send({ name: '无头', sex: 'male', parents: [], marriages: [] });
+    assert.equal(created.status, 403);
+    assert.deepEqual(created.body, { error: '缺少请求头' });
+  });
+
+  it('returns 404 for a missing person', async () => {
+    const detail = await agent().get('/api/persons/999999').set('Cookie', cookie);
+    assert.equal(detail.status, 404);
+    assert.deepEqual(detail.body, { error: '找不到这个人' });
+    const patched = await agent()
+      .patch('/api/persons/999999')
+      .set('X-Familytree', '1')
+      .set('Cookie', cookie)
+      .send({ name: '不存在', sex: 'male', parents: [], marriages: [] });
+    assert.equal(patched.status, 404);
+    const removed = await agent().delete('/api/persons/999999').set('X-Familytree', '1').set('Cookie', cookie);
+    assert.equal(removed.status, 404);
+  });
+
+  it('rejects an unrecognized payload', async () => {
+    const created = await agent()
+      .post('/api/persons')
+      .set('X-Familytree', '1')
+      .set('Cookie', cookie)
+      .send({ sex: 'male' });
+    assert.equal(created.status, 400);
+    assert.deepEqual(created.body, { error: '提交的内容无法识别' });
+  });
+
+  it('treats an unknown session cookie as logged out', async () => {
+    const stranger = await agent().get('/api/tree').set('Cookie', 'familytree_session=not-a-real-token');
+    assert.equal(stranger.status, 401);
   });
 
   it('returns the representative ages', async () => {

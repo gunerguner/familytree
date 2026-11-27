@@ -3,14 +3,14 @@ import { NButton } from 'naive-ui';
 import { useVueFlow } from '@xyflow/vue';
 
 const emit = defineEmits<{ create: [] }>();
-const { zoomIn, zoomOut, setViewport } = useVueFlow();
+const { zoomIn, zoomOut, fitView } = useVueFlow();
 
 function zoom(direction: 'in' | 'out') {
   void (direction === 'in' ? zoomIn : zoomOut)({ duration: 0 });
 }
 
 function resetView() {
-  void setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 0 });
+  void fitView({ padding: 0.2, duration: 250 });
 }
 </script>
 

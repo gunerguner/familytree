@@ -49,15 +49,17 @@ export function marriageLines(cards: LayoutCard[]): DraftLine[] {
   return lines;
 }
 
-export function bloodLine(
-  anchorX: number,
-  anchorY: number,
-  railY: number,
-  childY: number,
-  targets: number[],
-  source: string,
-  target: string,
-): DraftLine {
+export interface BloodLineInput {
+  anchorX: number;
+  anchorY: number;
+  railY: number;
+  childY: number;
+  targets: number[];
+  source: string;
+  target: string;
+}
+
+export function bloodLine({ anchorX, anchorY, railY, childY, targets, source, target }: BloodLineInput): DraftLine {
   return { kind: 'blood', source, target, x1: anchorX, y1: anchorY, x2: anchorX, y2: railY, railY, childY, targets };
 }
 

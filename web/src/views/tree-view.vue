@@ -5,6 +5,7 @@ import { NDrawer, NDrawerContent, NLayoutHeader, NButton, useMessage } from 'nai
 import PersonPanel from '../components/person-panel.vue';
 import TreeCanvas from '../components/tree-canvas.vue';
 import { ApiError } from '../api/client';
+import { COLORS } from '../lib/tokens';
 import { useSessionStore } from '../stores/session';
 import { useTreeStore } from '../stores/tree';
 
@@ -14,6 +15,7 @@ const session = useSessionStore();
 const tree = useTreeStore();
 const message = useMessage();
 const editing = ref(false);
+const loadFailed = ref(false);
 
 const personId = computed(() => {
   const raw = Array.isArray(route.query.person) ? route.query.person[0] : route.query.person;
@@ -40,11 +42,24 @@ watch(
       if (error instanceof ApiError && error.status === 404) {
         message.error('找不到这个人');
         await router.replace({ path: '/' });
+      } else if (error instanceof ApiError) {
+        message.error(error.message);
+      } else {
+        message.error('网络中断，请再试一次');
       }
     }
   },
   { immediate: true },
 );
+
+async function loadTree() {
+  loadFailed.value = false;
+  try {
+    await tree.loadTree();
+  } catch {
+    loadFailed.value = true;
+  }
+}
 
 async function logout() {
   await session.logout();
@@ -70,7 +85,7 @@ async function saved(id: number) {
 }
 
 onMounted(() => {
-  void tree.loadTree();
+  void loadTree();
 });
 </script>
 
@@ -84,6 +99,10 @@ onMounted(() => {
       </div>
     </n-layout-header>
     <div class="body">
+      <div v-if="loadFailed" class="load-error">
+        <span>族谱加载失败，请检查网络后重试</span>
+        <n-button size="small" @click="loadTree">重试</n-button>
+      </div>
       <tree-canvas
         :persons="tree.persons"
         :parents="tree.parents"
@@ -99,7 +118,7 @@ onMounted(() => {
         placement="right"
         :width="'min(24rem, calc(100vw - 3rem))'"
         show-mask="transparent"
-        :content-style="{ background: '#fffcf7' }"
+        :content-style="{ background: COLORS.paper }"
         @update:show="(show) => { if (!show) closePanel(); }"
       >
         <n-drawer-content :body-content-style="{ padding: '20px 22px 32px' }">
@@ -130,7 +149,17 @@ onMounted(() => {
   justify-content: space-between;
   height: 56px;
   padding: 0 20px;
-  background: #fffcf7;
+  background: var(--color-paper);
+}
+.load-error {
+  position: absolute;
+  z-index: 4;
+  top: 80px;
+  left: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-accent);
 }
 .brand {
   font-size: 20px;

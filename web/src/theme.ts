@@ -1,14 +1,15 @@
 import type { GlobalThemeOverrides } from 'naive-ui';
+import { COLORS } from './lib/tokens';
 
 export const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColor: '#3d6b58',
-    primaryColorHover: '#4f7d69',
-    primaryColorPressed: '#315746',
-    primaryColorSuppl: '#3d6b58',
-    bodyColor: '#f3f0e8',
-    cardColor: '#fffcf7',
-    textColorBase: '#24302c',
+    primaryColor: COLORS.ink,
+    primaryColorHover: COLORS.inkHover,
+    primaryColorPressed: COLORS.inkPressed,
+    primaryColorSuppl: COLORS.ink,
+    bodyColor: COLORS.canvas,
+    cardColor: COLORS.paper,
+    textColorBase: COLORS.base,
     borderColor: '#e3d9cc',
     errorColor: '#8c4a3a',
     fontFamily: '"Avenir Next", "PingFang SC", "Noto Sans SC", sans-serif',

@@ -61,10 +61,11 @@ interface Unit {
   folds: LayoutFold[];
 }
 
+export const CARD_W = 112;
+export const CARD_H = 48;
+
 const MARGIN = 48;
 const ROOT_GAP = 80;
-const CARD_W = 112;
-const CARD_H = 48;
 const SPOUSE_GAP = 36;
 const CARD_GAP = 12;
 const GROUP_GAP = 28;
@@ -105,17 +106,17 @@ export function layout(
   }
 
   // 主卡与侧卡（含侧卡自己另配的人，如续弦）排成一行；已是根或在结构分支里的人有自己的位置，不重复
-  const collectRow = (id: number): RowCard[] => {
+  const collectRow = (id: number, taken: Set<number>): RowCard[] => {
     const row: RowCard[] = [{ id, side: false }];
     const placed = new Set([id]);
     for (const spouse of spousesOf(id, marriages)) {
-      if (structural.has(spouse.id) || rootSet.has(spouse.id) || !byId.has(spouse.id)) continue;
+      if (taken.has(spouse.id) || structural.has(spouse.id) || rootSet.has(spouse.id) || !byId.has(spouse.id)) continue;
       placed.add(spouse.id);
       row.push({ id: spouse.id, side: true });
     }
     for (let index = 1; index < row.length; index += 1) {
       for (const co of spousesOf(row[index].id, marriages)) {
-        if (placed.has(co.id) || structural.has(co.id) || rootSet.has(co.id) || !byId.has(co.id)) continue;
+        if (placed.has(co.id) || taken.has(co.id) || structural.has(co.id) || rootSet.has(co.id) || !byId.has(co.id)) continue;
         placed.add(co.id);
         row.push({ id: co.id, side: true });
       }
@@ -159,67 +160,73 @@ export function layout(
     return { groups, keys };
   };
 
-  function layoutUnit(id: number): Unit {
-    const row = collectRow(id);
-    const { groups, keys } = groupChildren(id, row);
-    const hasChildren = [...groups.values()].some((list) => list.length > 0);
+  const unitRowWidth = (row: RowCard[]) => row.length * CARD_W + SPOUSE_GAP * (row.length - 1);
+
+  interface RowSpec {
+    id: number;
+    row: RowCard[];
+    hasChildren: boolean;
+    folded: boolean;
+  }
+
+  function placeRow(spec: RowSpec, shift: number): LayoutCard[] {
+    let x = shift;
+    return spec.row.map((card) => {
+      const placed: LayoutCard = {
+        id: card.id,
+        x,
+        y: 0,
+        width: CARD_W,
+        height: CARD_H,
+        side: card.side,
+        hasChildren: card.id === spec.id && spec.hasChildren,
+        collapsed: card.id === spec.id && spec.folded,
+      };
+      x += CARD_W + SPOUSE_GAP;
+      return placed;
+    });
+  }
+
+  // 无子女或已折叠：一行卡片，折叠时只留一小段血缘线和一个折叠按钮
+  function leafUnit(id: number, row: RowCard[], hasChildren: boolean, keys: number[]): Unit {
     const folded = collapsed.has(id);
-    const rowWidth = row.length * CARD_W + SPOUSE_GAP * (row.length - 1);
-
-    const placeRow = (shift: number): LayoutCard[] => {
-      let x = shift;
-      return row.map((card) => {
-        const placed: LayoutCard = {
-          id: card.id,
-          x,
-          y: 0,
-          width: CARD_W,
-          height: CARD_H,
-          side: card.side,
-          hasChildren: card.id === id && hasChildren,
-          collapsed: card.id === id && folded,
-        };
-        x += CARD_W + SPOUSE_GAP;
-        return placed;
-      });
-    };
-
-    if (!hasChildren || folded) {
-      const cards = placeRow(0);
-      const lines = marriageLines(cards);
-      const folds: LayoutFold[] = [];
-      let height = CARD_H;
-      if (hasChildren && folded) {
-        const anchor = anchorOf(cards, keys[0] ?? 0);
-        const stemTop = Math.max(anchor.y, CARD_H);
-        const railY = stemTop + FOLD_STUB;
-        lines.push(
-          bloodLine(
-            anchor.x,
-            anchor.y,
-            railY,
-            railY,
-            [anchor.x],
-            anchorSource(cards, keys[0] ?? 0, id),
-            foldNodeId(id),
-          ),
-        );
-        folds.push({ id, x: anchor.x, y: (stemTop + railY) / 2, collapsed: true });
-        height = railY;
-      }
-      return { width: rowWidth, height, topX: CARD_W / 2, cards, lines, folds };
+    const cards = placeRow({ id, row, hasChildren, folded }, 0);
+    const lines = marriageLines(cards);
+    const folds: LayoutFold[] = [];
+    let height = CARD_H;
+    if (hasChildren && folded) {
+      const anchor = anchorOf(cards, keys[0] ?? 0);
+      const stemTop = Math.max(anchor.y, CARD_H);
+      const railY = stemTop + FOLD_STUB;
+      lines.push(
+        bloodLine({
+          anchorX: anchor.x,
+          anchorY: anchor.y,
+          railY,
+          childY: railY,
+          targets: [anchor.x],
+          source: anchorSource(cards, keys[0] ?? 0, id),
+          target: foldNodeId(id),
+        }),
+      );
+      folds.push({ id, x: anchor.x, y: (stemTop + railY) / 2, collapsed: true });
+      height = railY;
     }
+    return { width: unitRowWidth(row), height, topX: CARD_W / 2, cards, lines, folds };
+  }
 
+  // 有子女：递归排子女单元，按婚姻分组，从各自锚点向下画血缘线
+  function familyUnit(id: number, row: RowCard[], groups: Map<number, number[]>, keys: number[]): Unit {
     const units = new Map<number, Unit>();
-    for (const childId of [...groups.values()].flat()) units.set(childId, layoutUnit(childId));
+    for (const childId of [...groups.values()].flat()) units.set(childId, layoutUnit(childId, taken));
     const groupWidths = keys.map((key) => {
       const list = groups.get(key)!;
       return list.reduce((sum, childId) => sum + units.get(childId)!.width, 0) + CARD_GAP * (list.length - 1);
     });
     const childrenWidth =
       groupWidths.reduce((sum, width) => sum + width, 0) + GROUP_GAP * Math.max(0, keys.length - 1);
-    const width = Math.max(rowWidth, childrenWidth);
-    const cards = placeRow((width - rowWidth) / 2);
+    const width = Math.max(unitRowWidth(row), childrenWidth);
+    const cards = placeRow({ id, row, hasChildren: true, folded: false }, (width - unitRowWidth(row)) / 2);
     const lines = marriageLines(cards);
     const folds: LayoutFold[] = [];
     let cursor = (width - childrenWidth) / 2;
@@ -245,7 +252,15 @@ export function layout(
         folds.push({ id, x: anchor.x, y: (stemTop + railY) / 2, collapsed: false });
       }
       lines.push(
-        bloodLine(anchor.x, anchor.y, railY, childY, targets, anchorSource(cards, key, id), foldNodeId(id)),
+        bloodLine({
+          anchorX: anchor.x,
+          anchorY: anchor.y,
+          railY,
+          childY,
+          targets,
+          source: anchorSource(cards, key, id),
+          target: foldNodeId(id),
+        }),
       );
       cursor += GROUP_GAP - CARD_GAP;
       if (index === keys.length - 1) cursor -= GROUP_GAP - CARD_GAP;
@@ -261,14 +276,35 @@ export function layout(
     };
   }
 
+  function layoutUnit(id: number, taken: Set<number>): Unit {
+    const row = collectRow(id, taken);
+    const { groups, keys } = groupChildren(id, row);
+    // 已被前一棵根树放置的人不再重复排布（如父母双方都是根时共同的孩子）
+    for (const key of [...keys]) {
+      const list = groups.get(key)!.filter((childId) => !taken.has(childId));
+      if (list.length) groups.set(key, list);
+      else {
+        groups.delete(key);
+        keys.splice(keys.indexOf(key), 1);
+      }
+    }
+    const hasChildren = [...groups.values()].some((list) => list.length > 0);
+    if (!hasChildren || collapsed.has(id)) return leafUnit(id, row, hasChildren, keys);
+    return familyUnit(id, row, groups, keys);
+  }
+
   const cards: LayoutCard[] = [];
   const lines: DraftLine[] = [];
   const folds: LayoutFold[] = [];
+  const taken = new Set<number>();
   let x = MARGIN;
   let treeHeight = 0;
   for (const root of roots) {
-    const unit = layoutUnit(root);
-    for (const card of unit.cards) cards.push({ ...card, x: card.x + x, y: card.y + MARGIN });
+    const unit = layoutUnit(root, taken);
+    for (const card of unit.cards) {
+      cards.push({ ...card, x: card.x + x, y: card.y + MARGIN });
+      taken.add(card.id);
+    }
     for (const line of unit.lines) lines.push(moveLine(line, x, MARGIN));
     for (const fold of unit.folds) folds.push(moveFold(fold, x, MARGIN));
     treeHeight = Math.max(treeHeight, unit.height);

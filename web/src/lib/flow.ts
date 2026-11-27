@@ -1,6 +1,7 @@
 import type { Edge, Node } from '@xyflow/vue';
 import type { Person } from '../api/types';
 import { foldNodeId, type LayoutResult } from './layout';
+import { COLORS } from './tokens';
 
 export interface PersonNodeData extends Record<string, unknown> {
   person: Person;
@@ -84,7 +85,7 @@ export function toFlow(result: LayoutResult, persons: Person[], selectedId: numb
     interactionWidth: 0,
     data: { d: line.d, kind: line.kind },
     style: {
-      stroke: line.kind === 'marriage' ? '#9c4036' : '#a89884',
+      stroke: line.kind === 'marriage' ? COLORS.accent : COLORS.line,
       strokeWidth: line.kind === 'marriage' ? 1.5 : 1.25,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',

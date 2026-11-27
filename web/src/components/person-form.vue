@@ -2,11 +2,12 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { NButton, NForm, NFormItem, NInput, NInputNumber, NSelect, useMessage } from 'naive-ui';
 import { ApiError } from '../api/client';
-import { ROLE_LABELS, SEX_LABELS, type ParentRole, type Person, type PersonDetail, type PersonInput, type Sex } from '../api/types';
+import { PERSON_FIELDS } from '../lib/person-fields';
+import { ROLE_LABELS, SEX_LABELS, type ParentRole, type Person, type PersonDraft, type PersonInput, type Sex } from '../api/types';
 import { useTreeStore } from '../stores/tree';
 
 const props = defineProps<{
-  detail: PersonDetail | null;
+  detail: PersonDraft | null;
 }>();
 
 const emit = defineEmits<{ saved: [id: number] }>();
@@ -122,8 +123,12 @@ async function submit() {
   };
   pending.value = true;
   try {
-    const saved = await tree.savePerson(input, props.detail?.id);
-    message.success('已保存');
+    const { detail: saved, refreshed } = await tree.savePerson(input, props.detail?.id);
+    if (refreshed) {
+      message.success('已保存');
+    } else {
+      message.warning('已保存，但列表刷新失败');
+    }
     emit('saved', saved.id);
   } catch (error) {
     if (error instanceof ApiError) {
@@ -148,23 +153,14 @@ defineExpose({ submit });
     <n-form-item label="性别" :validation-status="sexError || fieldErrors.sex ? 'error' : undefined" :feedback="sexError || fieldErrors.sex">
       <n-select v-model:value="form.sex" :options="sexes" />
     </n-form-item>
-    <n-form-item label="称谓">
-      <n-input v-model:value="form.kinship" />
-    </n-form-item>
-    <n-form-item label="原名">
-      <n-input v-model:value="form.formerName" />
-    </n-form-item>
-    <n-form-item label="小名">
-      <n-input v-model:value="form.nickname" />
-    </n-form-item>
-    <n-form-item label="出生">
-      <n-input v-model:value="form.birthText" placeholder="按资料原文填写，例如 1900.2.18 或 正月十九" />
-    </n-form-item>
-    <n-form-item label="卒于">
-      <n-input v-model:value="form.deathText" placeholder="按资料原文填写，例如 1900.2.18 或 正月十九" />
-    </n-form-item>
-    <n-form-item label="记述">
-      <n-input v-model:value="form.narrative" type="textarea" :autosize="{ minRows: 4, maxRows: 10 }" />
+    <n-form-item v-for="field in PERSON_FIELDS" :key="field.key" :label="field.label">
+      <n-input
+        v-if="field.textarea"
+        v-model:value="form[field.key]"
+        type="textarea"
+        :autosize="{ minRows: 4, maxRows: 10 }"
+      />
+      <n-input v-else v-model:value="form[field.key]" :placeholder="field.placeholder" />
     </n-form-item>
 
     <section class="block">
